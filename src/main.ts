@@ -827,7 +827,8 @@ const kDevices = [
       {"type":"Out","id":"dev30","x":224,"y":216,"label":""},
       {"type":"Out","id":"dev31","x":224,"y":232,"label":""},
       {"type":"Out","id":"dev32","x":224,"y":248,"label":""},
-      {"type":"Out","id":"dev33","x":224,"y":264,"label":""}
+      {"type":"Out","id":"dev33","x":224,"y":264,"label":""},
+      {"type":"NOT","id":"dev34","x":64,"y":304,"label":""}
     ],
     "connectors":[
       {"from":"dev17.in0","to":"dev0.out0"},
@@ -846,7 +847,7 @@ const kDevices = [
       {"from":"dev17.in13","to":"dev13.out0"},
       {"from":"dev17.in14","to":"dev14.out0"},
       {"from":"dev17.in15","to":"dev15.out0"},
-      {"from":"dev17.in16","to":"dev16.out0"},
+      {"from":"dev17.in16","to":"dev34.out0"},
       {"from":"dev18.in0","to":"dev17.out0"},
       {"from":"dev19.in0","to":"dev17.out1"},
       {"from":"dev20.in0","to":"dev17.out2"},
@@ -862,7 +863,8 @@ const kDevices = [
       {"from":"dev30.in0","to":"dev17.out12"},
       {"from":"dev31.in0","to":"dev17.out13"},
       {"from":"dev32.in0","to":"dev17.out14"},
-      {"from":"dev33.in0","to":"dev17.out15"}
+      {"from":"dev33.in0","to":"dev17.out15"},
+      {"from":"dev34.in0","to":"dev16.out0"}
     ],
   },
 
