@@ -1,6 +1,7 @@
 ///<reference path="./decl/simcirjs.d.ts" />
 
 import {simcir} from 'simcirjs'
+import './nandonly'
 
 window.addEventListener('load', () => {
   const parent = document.getElementById('simcir-placeholder')
