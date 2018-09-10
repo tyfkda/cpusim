@@ -1,14 +1,19 @@
-import {Util, generatorTest} from './util/util'
+///<reference path="./decl/simcirjs.d.ts" />
 
-const g = generatorTest()
-for (;;) {
-  const {value, done} = g.next()
-  if (done)
-    break
-  console.log(value)
-}
+import {simcir} from 'simcirjs'
 
-Util.promiseTest()
-  .then(result => {
-    console.log(`Promise: result=${result}`)
+window.addEventListener('load', () => {
+  const parent = document.getElementById('simcir-placeholder')
+  if (!parent)
+    return
+
+  const div = document.createElement('div')
+  simcir.setupSimcir([div], {
+    width: parent.clientWidth,
+    height: parent.clientHeight,
   })
+
+  div.classList.add('simcir')
+
+  parent.appendChild(div)
+})
