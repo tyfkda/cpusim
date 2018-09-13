@@ -151,7 +151,7 @@ const AND = function(a: number, b: number) { return a & b }
 const NOT = function(a: number) { return (a == 1)? 0 : 1 }
 
 const onValue = 1
-//const offValue = null
+const offValue = null
 const isHot = function(v?: number) { return v != null }
 const intValue = function(v?: number) { return isHot(v)? 1 : 0 }
 
@@ -359,3 +359,99 @@ $s.registerDevice('NAND', createLogicGateFactory(AND, NOT, drawNAND) )
 // deprecated. not displayed in the default toolbox.
 //$s.registerDevice('EOR', createLogicGateFactory(EOR, BUF, drawEOR), true)
 //$s.registerDevice('ENOR', createLogicGateFactory(EOR, NOT, drawENOR), true)
+
+// register Oscillator
+$s.registerDevice('OSC', function(device: any) {
+  const freq = device.deviceDef.freq || 10
+  const delay = ~~(500 / freq)
+  const out1 = device.addOutput()
+  let timerId: number|null = null
+  let on = false
+  device.$ui.on('deviceAdd', function() {
+    timerId = window.setInterval(function() {
+      out1.setValue(on? onValue : offValue)
+      on = !on
+    }, delay)
+  })
+  device.$ui.on('deviceRemove', function() {
+    if (timerId != null) {
+      window.clearInterval(timerId)
+      timerId = null
+    }
+  })
+  const super_createUI = device.createUI
+  device.createUI = function() {
+    super_createUI()
+    device.$ui.addClass('simcir-basicset-osc')
+    device.doc = {
+      params: [
+        {name: 'freq', type: 'number', defaultValue: '10',
+         description: 'frequency of an oscillator.'}
+      ],
+      code: '{"type":"' + device.deviceDef.type + '","freq":10}'
+    }
+  }
+})
+
+$s.registerDevice('BusIn', function(device: any) {
+  const numOutputs = Math.max(2, device.deviceDef.numOutputs || 8)
+  device.halfPitch = true
+  device.addInput('', 'x' + numOutputs)
+  for (let i = 0; i < numOutputs; i += 1) {
+    device.addOutput()
+  }
+  const extractValue = function(busValue: any, i: number) {
+    return (busValue != null && typeof busValue == 'object' &&
+            typeof busValue[i] != 'undefined')? busValue[i] : null
+  }
+  device.$ui.on('inputValueChange', function() {
+    const busValue = device.getInputs()[0].getValue()
+    for (let i = 0; i < numOutputs; i += 1) {
+      device.getOutputs()[i].setValue(extractValue(busValue, i) )
+    }
+  })
+  const super_createUI = device.createUI
+  device.createUI = function() {
+    super_createUI()
+    device.doc = {
+      params: [
+        {name: 'numOutputs', type: 'number', defaultValue: 8,
+         description: 'number of outputs.'}
+      ],
+      code: '{"type":"' + device.deviceDef.type + '","numOutputs":8}'
+    }
+  }
+})
+
+$s.registerDevice('BusOut', function(device: any) {
+  const numInputs = Math.max(2, device.deviceDef.numInputs || 8)
+  device.halfPitch = true
+  for (let i = 0; i < numInputs; i += 1) {
+    device.addInput()
+  }
+  device.addOutput('', 'x' + numInputs)
+  device.$ui.on('inputValueChange', function() {
+    const busValue = []
+    let hotCount = 0
+    for (let i = 0; i < numInputs; i += 1) {
+      const value = device.getInputs()[i].getValue()
+      if (isHot(value) ) {
+        hotCount += 1
+      }
+      busValue.push(value)
+    }
+    device.getOutputs()[0].setValue(
+      (hotCount > 0)? busValue : null)
+  })
+  const super_createUI = device.createUI
+  device.createUI = function() {
+    super_createUI()
+    device.doc = {
+      params: [
+        {name: 'numInputs', type: 'number', defaultValue: 8,
+         description: 'number of inputs.'}
+      ],
+      code: '{"type":"' + device.deviceDef.type + '","numInputs":8}'
+    }
+  }
+})
