@@ -3,7 +3,7 @@
 import {simcir} from 'simcirjs'
 import './nandonly'
 
-function drawNOT(g, x, y, width, height) {
+function drawNOT(g: any, x: number, y: number, width: number, height: number) {
   g.moveTo(x - 1, y)
   g.lineTo(x - 1 + width - 2, y + height / 2)
   g.lineTo(x - 1, y + height)
@@ -13,7 +13,7 @@ function drawNOT(g, x, y, width, height) {
   g.drawCircle(x + width - 1, y + height / 2, 2)
 }
 
-function drawAND(g, x, y, width, height) {
+function drawAND(g: any, x: number, y: number, width: number, height: number) {
   g.moveTo(x, y)
   g.curveTo(x + width, y, x + width, y + height / 2)
   g.curveTo(x + width, y + height, x, y + height)
@@ -21,7 +21,7 @@ function drawAND(g, x, y, width, height) {
   g.closePath(true)
 }
 
-function drawOR(g, x, y, width, height) {
+function drawOR(g: any, x: number, y: number, width: number, height: number) {
   const depth = width * 0.2
   g.moveTo(x, y)
   g.curveTo(x + width - depth, y, x + width, y + height / 2)
@@ -31,7 +31,16 @@ function drawOR(g, x, y, width, height) {
   g.closePath(true)
 }
 
-const kDevices = [
+function drawXOR(g: any, x: number, y: number, width: number, height: number) {
+  drawOR(g, x + 3, y, width - 3, height)
+  const depth = (width - 3) * 0.2
+  g.moveTo(x, y + height)
+  g.curveTo(x + depth, y + height, x + depth, y + height / 2)
+  g.curveTo(x + depth, y, x, y)
+  g.closePath()
+}
+
+const kDevices: any = [
   // 0: NAND
   {
     name: 'NAND',
@@ -180,14 +189,7 @@ const kDevices = [
     ],
     // Custom draw
     chipWidth: 2,
-    draw: function(g, x, y, width, height) {
-      drawOR(g, x + 3, y, width - 3, height)
-      const depth = (width - 3) * 0.2
-      g.moveTo(x, y + height)
-      g.curveTo(x + depth, y + height, x + depth, y + height / 2)
-      g.curveTo(x + depth, y, x, y)
-      g.closePath()
-    },
+    draw: drawXOR,
   },
 
   // 5: Multiplexor
@@ -803,7 +805,6 @@ const kDevices = [
     height: 450,
     noRender: true,
     noToolbox: true,
-    //halfPitch: true,
     "devices":[
       {"type":"FullAdder","id":"dev0","x":160,"y":24,"label":"FullAdder"},
       {"type":"FullAdder","id":"dev1","x":160,"y":72,"label":"FullAdder"},
@@ -928,6 +929,7 @@ const kDevices = [
     width: 600,
     height: 500,
     noRender: true,
+    noToolbox: true,
     "devices":[
       {"type":"Out","id":"dev0","x":272,"y":24,"label":"Out"},
       {"type":"Out","id":"dev1","x":272,"y":64,"label":"Out"},
@@ -963,6 +965,7 @@ const kDevices = [
     width: 600,
     height: 500,
     noRender: true,
+    noToolbox: true,
     "devices":[
       {"type":"In","id":"dev0","x":24,"y":24,"label":"xL"},
       {"type":"In","id":"dev1","x":24,"y":64,"label":"xH"},
@@ -1014,69 +1017,185 @@ const kDevices = [
     ],
   },
 
+  // CZeroFlip16
+  {
+    name: 'CZeroFlip16',
+    width: 600,
+    height: 500,
+    noRender: true,
+    noToolbox: true,
+    "devices":[
+      {"type":"In","id":"dev0","x":24,"y":64,"label":"xH"},
+      {"type":"In","id":"dev1","x":24,"y":104,"label":"zx"},
+      {"type":"In","id":"dev2","x":24,"y":144,"label":"nx"},
+      {"type":"CZero16","id":"dev3","x":80,"y":32,"label":"CZero16"},
+      {"type":"CFlip16","id":"dev4","x":184,"y":40,"label":"CFlip16"},
+      {"type":"In","id":"dev5","x":24,"y":24,"label":"xL"},
+      {"type":"Out","id":"dev6","x":280,"y":24,"label":"oL"},
+      {"type":"Out","id":"dev7","x":280,"y":72,"label":"oH"},
+    ],
+    "connectors":[
+      {"from":"dev3.in0","to":"dev5.out0"},
+      {"from":"dev3.in1","to":"dev0.out0"},
+      {"from":"dev3.in2","to":"dev1.out0"},
+      {"from":"dev4.in0","to":"dev3.out0"},
+      {"from":"dev4.in1","to":"dev3.out1"},
+      {"from":"dev4.in2","to":"dev2.out0"},
+      {"from":"dev6.in0","to":"dev4.out0"},
+      {"from":"dev7.in0","to":"dev4.out1"},
+    ],
+  },
+
   // ALU
   {
     name: 'ALU',
+    width: 600,
+    height: 500,
     "devices":[
-      {"type":"DC","id":"dev0","x":8,"y":88,"label":"DC"},
-      {"type":"Toggle","id":"dev1","x":56,"y":64,"label":"Toggle","state":{"on":true}},
-      {"type":"Toggle","id":"dev2","x":56,"y":16,"label":"Toggle","state":{"on":false}},
-      {"type":"Toggle","id":"dev3","x":56,"y":112,"label":"Toggle","state":{"on":true}},
-      {"type":"Toggle","id":"dev4","x":56,"y":160,"label":"Toggle","state":{"on":false}},
-      {"type":"In","id":"dev5","x":160,"y":376,"label":"zx"},
-      {"type":"Out","id":"dev6","x":344,"y":80,"label":"Out"},
-      {"type":"Out","id":"dev7","x":344,"y":128,"label":"Out"},
-      {"type":"Out","id":"dev8","x":344,"y":176,"label":"Out"},
-      {"type":"Out","id":"dev9","x":344,"y":224,"label":"Out"},
-      {"type":"LED","id":"dev10","x":432,"y":56,"label":"LED"},
-      {"type":"LED","id":"dev11","x":432,"y":104,"label":"LED"},
-      {"type":"LED","id":"dev12","x":432,"y":152,"label":"LED"},
-      {"type":"LED","id":"dev13","x":432,"y":200,"label":"LED"},
-      {"type":"In","id":"dev14","x":160,"y":432,"label":"nx"},
-      {"type":"In","id":"dev15","x":160,"y":192,"label":"xH"},
-      {"type":"In","id":"dev16","x":160,"y":152,"label":"xL"},
-      {"type":"Toggle","id":"dev17","x":56,"y":200,"label":"Toggle","state":{"on":false}},
-      {"type":"Toggle","id":"dev18","x":56,"y":240,"label":"Toggle","state":{"on":false}},
-      {"type":"Toggle","id":"dev19","x":56,"y":280,"label":"Toggle","state":{"on":false}},
-      {"type":"Toggle","id":"dev20","x":56,"y":320,"label":"Toggle","state":{"on":false}},
-      {"type":"BusIn","id":"dev21","x":392,"y":128,"label":"BusIn"},
-      {"type":"BusOut","id":"dev22","x":112,"y":152,"label":"BusOut"},
-      {"type":"Toggle","id":"dev23","x":56,"y":376,"label":"Toggle","state":{"on":false}},
-      {"type":"Toggle","id":"dev24","x":56,"y":432,"label":"Toggle","state":{"on":false}},
-      {"type":"CZero16","id":"dev25","x":216,"y":168,"label":"CZero16"},
-      {"type":"CFlip16","id":"dev26","x":312,"y":304,"label":"CFlip16"}
+      {"type":"Toggle","id":"dev0","x":56,"y":16,"label":"Toggle","state":{"on":false}},
+      {"type":"In","id":"dev1","x":80,"y":192,"label":"xH"},
+      {"type":"In","id":"dev2","x":80,"y":152,"label":"xL"},
+      {"type":"BusOut","id":"dev3","x":32,"y":152,"label":"BusOut"},
+      {"type":"In","id":"dev4","x":80,"y":336,"label":"yL"},
+      {"type":"In","id":"dev5","x":80,"y":376,"label":"yH"},
+      {"type":"In","id":"dev6","x":80,"y":424,"label":"zy"},
+      {"type":"In","id":"dev7","x":80,"y":464,"label":"ny"},
+      {"type":"In","id":"dev8","x":80,"y":240,"label":"zx"},
+      {"type":"In","id":"dev9","x":80,"y":280,"label":"nx"},
+      {"type":"DC","id":"dev10","x":8,"y":16,"label":"DC"},
+      {"type":"Toggle","id":"dev11","x":96,"y":16,"label":"Toggle","state":{"on":true}},
+      {"type":"Toggle","id":"dev12","x":136,"y":16,"label":"Toggle","state":{"on":true}},
+      {"type":"Toggle","id":"dev13","x":176,"y":16,"label":"Toggle","state":{"on":false}},
+      {"type":"Toggle","id":"dev14","x":216,"y":16,"label":"Toggle","state":{"on":false}},
+      {"type":"Toggle","id":"dev15","x":256,"y":16,"label":"Toggle","state":{"on":false}},
+      {"type":"Toggle","id":"dev16","x":296,"y":16,"label":"Toggle","state":{"on":false}},
+      {"type":"Toggle","id":"dev17","x":336,"y":16,"label":"Toggle","state":{"on":false}},
+      {"type":"LED","id":"dev18","x":448,"y":152,"label":"LED"},
+      {"type":"BusIn","id":"dev19","x":392,"y":192,"label":"BusIn"},
+      {"type":"CZeroFlip16","id":"dev20","x":152,"y":368,"label":"CZeroFlip16"},
+      {"type":"CZeroFlip16","id":"dev21","x":152,"y":192,"label":"CZeroFlip16"},
+      {"type":"In","id":"dev22","x":80,"y":512,"label":"f"},
+      {"type":"Add16","id":"dev23","x":240,"y":216,"label":"Add16"},
+      {"type":"And16","id":"dev24","x":256,"y":320,"label":"And16"},
+      {"type":"In","id":"dev25","x":80,"y":560,"label":"no"},
+      {"type":"Toggle","id":"dev26","x":56,"y":72,"label":"Toggle","state":{"on":true}},
+      {"type":"Toggle","id":"dev27","x":96,"y":72,"label":"Toggle","state":{"on":true}},
+      {"type":"Toggle","id":"dev28","x":136,"y":72,"label":"Toggle","state":{"on":false}},
+      {"type":"Toggle","id":"dev29","x":176,"y":72,"label":"Toggle","state":{"on":false}},
+      {"type":"Toggle","id":"dev30","x":216,"y":72,"label":"Toggle","state":{"on":false}},
+      {"type":"Toggle","id":"dev31","x":256,"y":72,"label":"Toggle","state":{"on":false}},
+      {"type":"Toggle","id":"dev32","x":296,"y":72,"label":"Toggle","state":{"on":false}},
+      {"type":"Toggle","id":"dev33","x":336,"y":72,"label":"Toggle","state":{"on":false}},
+      {"type":"BusOut","id":"dev34","x":32,"y":304,"label":"BusOut"},
+      {"type":"LED","id":"dev35","x":448,"y":192,"label":"LED"},
+      {"type":"LED","id":"dev36","x":448,"y":232,"label":"LED"},
+      {"type":"LED","id":"dev37","x":448,"y":272,"label":"LED"},
+      {"type":"Or8Way","id":"dev38","x":168,"y":648,"label":"Or8Way"},
+      {"type":"Out","id":"dev39","x":368,"y":464,"label":"oL"},
+      {"type":"Out","id":"dev40","x":368,"y":512,"label":"oH"},
+      {"type":"Out","id":"dev41","x":368,"y":560,"label":"zr"},
+      {"type":"Out","id":"dev42","x":368,"y":608,"label":"ng"},
+      {"type":"Toggle","id":"dev43","x":424,"y":72,"label":"ny","state":{"on":false}},
+      {"type":"Toggle","id":"dev44","x":384,"y":72,"label":"zy","state":{"on":false}},
+      {"type":"Toggle","id":"dev45","x":384,"y":16,"label":"zx","state":{"on":false}},
+      {"type":"Toggle","id":"dev46","x":424,"y":16,"label":"nx","state":{"on":false}},
+      {"type":"Toggle","id":"dev47","x":24,"y":512,"label":"f","state":{"on":true}},
+      {"type":"Toggle","id":"dev48","x":24,"y":560,"label":"no","state":{"on":false}},
+      {"type":"LED","id":"dev49","x":448,"y":320,"label":"zr"},
+      {"type":"LED","id":"dev50","x":448,"y":368,"label":"ng"},
+      {"type":"Mux4Way8","id":"dev51","x":176,"y":472,"label":"Mux4Way8"},
+      {"type":"Mux4Way8","id":"dev52","x":176,"y":536,"label":"Mux4Way8"},
+      {"type":"CFlip16","id":"dev53","x":272,"y":528,"label":"CFlip16"},
+      {"type":"BusIn","id":"dev54","x":320,"y":656,"label":"BusIn"},
+      {"type":"NOT","id":"dev55","x":248,"y":664,"label":"NOT"},
+      {"type":"Or8Way","id":"dev56","x":168,"y":680,"label":"Or8Way"},
+      {"type":"OR","id":"dev57","x":208,"y":664,"label":"OR"}
     ],
     "connectors":[
-      {"from":"dev1.in0","to":"dev0.out0"},
-      {"from":"dev2.in0","to":"dev0.out0"},
+      {"from":"dev0.in0","to":"dev10.out0"},
+      {"from":"dev2.in0","to":"dev3.out0"},
       {"from":"dev3.in0","to":"dev0.out0"},
-      {"from":"dev4.in0","to":"dev0.out0"},
-      {"from":"dev5.in0","to":"dev23.out0"},
-      {"from":"dev6.in0","to":"dev26.out0"},
-      {"from":"dev7.in0","to":"dev26.out1"},
-      {"from":"dev10.in0","to":"dev21.out0"},
-      {"from":"dev11.in0","to":"dev21.out1"},
-      {"from":"dev12.in0","to":"dev21.out2"},
-      {"from":"dev13.in0","to":"dev21.out3"},
-      {"from":"dev14.in0","to":"dev24.out0"},
-      {"from":"dev16.in0","to":"dev22.out0"},
-      {"from":"dev21.in0","to":"dev6.out0"},
-      {"from":"dev22.in0","to":"dev2.out0"},
-      {"from":"dev22.in1","to":"dev1.out0"},
-      {"from":"dev22.in2","to":"dev3.out0"},
-      {"from":"dev22.in3","to":"dev4.out0"},
-      {"from":"dev22.in4","to":"dev17.out0"},
-      {"from":"dev22.in5","to":"dev18.out0"},
-      {"from":"dev22.in6","to":"dev19.out0"},
-      {"from":"dev22.in7","to":"dev20.out0"},
-      {"from":"dev23.in0","to":"dev0.out0"},
-      {"from":"dev24.in0","to":"dev0.out0"},
-      {"from":"dev25.in0","to":"dev16.out0"},
-      {"from":"dev25.in1","to":"dev15.out0"},
-      {"from":"dev25.in2","to":"dev5.out0"},
-      {"from":"dev26.in0","to":"dev25.out0"},
-      {"from":"dev26.in1","to":"dev25.out1"},
-      {"from":"dev26.in2","to":"dev14.out0"}
+      {"from":"dev3.in1","to":"dev11.out0"},
+      {"from":"dev3.in2","to":"dev12.out0"},
+      {"from":"dev3.in3","to":"dev13.out0"},
+      {"from":"dev3.in4","to":"dev14.out0"},
+      {"from":"dev3.in5","to":"dev15.out0"},
+      {"from":"dev3.in6","to":"dev16.out0"},
+      {"from":"dev3.in7","to":"dev17.out0"},
+      {"from":"dev4.in0","to":"dev34.out0"},
+      {"from":"dev6.in0","to":"dev44.out0"},
+      {"from":"dev7.in0","to":"dev43.out0"},
+      {"from":"dev8.in0","to":"dev45.out0"},
+      {"from":"dev9.in0","to":"dev46.out0"},
+      {"from":"dev11.in0","to":"dev10.out0"},
+      {"from":"dev12.in0","to":"dev10.out0"},
+      {"from":"dev13.in0","to":"dev10.out0"},
+      {"from":"dev18.in0","to":"dev19.out0"},
+      {"from":"dev19.in0","to":"dev39.out0"},
+      {"from":"dev20.in0","to":"dev4.out0"},
+      {"from":"dev20.in1","to":"dev5.out0"},
+      {"from":"dev20.in2","to":"dev6.out0"},
+      {"from":"dev20.in3","to":"dev7.out0"},
+      {"from":"dev21.in0","to":"dev2.out0"},
+      {"from":"dev21.in1","to":"dev1.out0"},
+      {"from":"dev21.in2","to":"dev8.out0"},
+      {"from":"dev21.in3","to":"dev9.out0"},
+      {"from":"dev22.in0","to":"dev47.out0"},
+      {"from":"dev23.in1","to":"dev21.out0"},
+      {"from":"dev23.in2","to":"dev21.out1"},
+      {"from":"dev23.in3","to":"dev20.out0"},
+      {"from":"dev23.in4","to":"dev20.out1"},
+      {"from":"dev24.in0","to":"dev21.out0"},
+      {"from":"dev24.in1","to":"dev21.out1"},
+      {"from":"dev24.in2","to":"dev20.out0"},
+      {"from":"dev24.in3","to":"dev20.out1"},
+      {"from":"dev25.in0","to":"dev48.out0"},
+      {"from":"dev26.in0","to":"dev10.out0"},
+      {"from":"dev27.in0","to":"dev10.out0"},
+      {"from":"dev28.in0","to":"dev10.out0"},
+      {"from":"dev29.in0","to":"dev10.out0"},
+      {"from":"dev30.in0","to":"dev10.out0"},
+      {"from":"dev31.in0","to":"dev10.out0"},
+      {"from":"dev32.in0","to":"dev10.out0"},
+      {"from":"dev33.in0","to":"dev10.out0"},
+      {"from":"dev34.in0","to":"dev26.out0"},
+      {"from":"dev34.in1","to":"dev27.out0"},
+      {"from":"dev34.in2","to":"dev28.out0"},
+      {"from":"dev34.in3","to":"dev29.out0"},
+      {"from":"dev34.in4","to":"dev30.out0"},
+      {"from":"dev34.in5","to":"dev31.out0"},
+      {"from":"dev34.in6","to":"dev32.out0"},
+      {"from":"dev34.in7","to":"dev33.out0"},
+      {"from":"dev35.in0","to":"dev19.out1"},
+      {"from":"dev36.in0","to":"dev19.out2"},
+      {"from":"dev37.in0","to":"dev19.out3"},
+      {"from":"dev38.in0","to":"dev53.out0"},
+      {"from":"dev39.in0","to":"dev53.out0"},
+      {"from":"dev40.in0","to":"dev53.out1"},
+      {"from":"dev41.in0","to":"dev55.out0"},
+      {"from":"dev42.in0","to":"dev54.out7"},
+      {"from":"dev43.in0","to":"dev10.out0"},
+      {"from":"dev44.in0","to":"dev10.out0"},
+      {"from":"dev45.in0","to":"dev10.out0"},
+      {"from":"dev46.in0","to":"dev10.out0"},
+      {"from":"dev47.in0","to":"dev10.out0"},
+      {"from":"dev48.in0","to":"dev10.out0"},
+      {"from":"dev49.in0","to":"dev41.out0"},
+      {"from":"dev50.in0","to":"dev42.out0"},
+      {"from":"dev51.in0","to":"dev24.out0"},
+      {"from":"dev51.in1","to":"dev23.out0"},
+      {"from":"dev51.in4","to":"dev22.out0"},
+      {"from":"dev52.in0","to":"dev24.out1"},
+      {"from":"dev52.in1","to":"dev23.out1"},
+      {"from":"dev52.in4","to":"dev22.out0"},
+      {"from":"dev53.in0","to":"dev51.out0"},
+      {"from":"dev53.in1","to":"dev52.out0"},
+      {"from":"dev53.in2","to":"dev25.out0"},
+      {"from":"dev54.in0","to":"dev53.out1"},
+      {"from":"dev55.in0","to":"dev57.out0"},
+      {"from":"dev56.in0","to":"dev53.out1"},
+      {"from":"dev57.in0","to":"dev38.out0"},
+      {"from":"dev57.in1","to":"dev56.out0"}
     ],
   },
 
@@ -1103,10 +1222,13 @@ window.addEventListener('load', () => {
   ]
 
   let j = 0
-  for (let i = 0; i < kDevices.length; ++i) {
+  const recur = (i: number) => {
+    if (i >= kDevices.length)
+      return
+
     const parent = parents[j]
     if (parent == null)
-      break
+      return
 
     const device = kDevices[i]
     let nextToolbox = toolbox
@@ -1132,5 +1254,7 @@ window.addEventListener('load', () => {
     }
 
     toolbox = nextToolbox
+    setTimeout(() => recur(i + 1), 100)
   }
+  recur(0)
 })
