@@ -41,7 +41,7 @@ function drawXOR(g: any, x: number, y: number, width: number, height: number) {
 }
 
 const kDevices: any = [
-  // 0: NAND
+  // NAND
   {
     name: 'NAND',
     noRegister: true,
@@ -68,9 +68,12 @@ const kDevices: any = [
     ],
   },
 
-  // 1: NOT
+  // NOT
   {
     name: 'NOT',
+    // Custom draw
+    chipWidth: 2,
+    draw: drawNOT,
     devices:[
       {"type":"DC","id":"dev0","x":16,"y":24,"label":"DC"},
       {"type":"Toggle","id":"dev1","x":64,"y":24,"label":"Toggle","state":{"on":false}},
@@ -87,14 +90,14 @@ const kDevices: any = [
       {"from":"dev4.in0","to":"dev3.out0"},
       {"from":"dev5.in0","to":"dev4.out0"}
     ],
-    // Custom draw
-    chipWidth: 2,
-    draw: drawNOT,
   },
 
-  // 2: AND
+  // AND
   {
     name: 'AND',
+    // Custom draw
+    chipWidth: 2,
+    draw: drawAND,
     "devices":[
       {"type":"Toggle","id":"dev0","x":64,"y":24,"label":"Toggle","state":{"on":false}},
       {"type":"NAND","id":"dev1","x":160,"y":48,"label":"NAND"},
@@ -117,14 +120,14 @@ const kDevices: any = [
       {"from":"dev7.in0","to":"dev8.out0"},
       {"from":"dev8.in0","to":"dev6.out0"}
     ],
-    // Custom draw
-    chipWidth: 2,
-    draw: drawAND,
   },
 
-  // 3: OR
+  // OR
   {
     name: 'OR',
+    // Custom draw
+    chipWidth: 2,
+    draw: drawOR,
     "devices":[
       {"type":"Toggle","id":"dev0","x":64,"y":24,"label":"Toggle","state":{"on":false}},
       {"type":"DC","id":"dev1","x":16,"y":48,"label":"DC"},
@@ -149,50 +152,43 @@ const kDevices: any = [
       {"from":"dev8.in0","to":"dev3.out0"},
       {"from":"dev9.in0","to":"dev4.out0"}
     ],
-    // Custom draw
-    chipWidth: 2,
-    draw: drawOR,
   },
 
-  // 4: XOR
+  // XOR
   {
     name: 'XOR',
+    // Custom draw
+    chipWidth: 2,
+    draw: drawXOR,
     "devices":[
       {"type":"Toggle","id":"dev0","x":64,"y":24,"label":"Toggle","state":{"on":false}},
       {"type":"DC","id":"dev1","x":16,"y":48,"label":"DC"},
       {"type":"Toggle","id":"dev2","x":64,"y":72,"label":"Toggle","state":{"on":false}},
       {"type":"In","id":"dev3","x":112,"y":24,"label":""},
       {"type":"In","id":"dev4","x":112,"y":72,"label":""},
-      {"type":"NOT","id":"dev5","x":160,"y":24,"label":"NOT"},
-      {"type":"NOT","id":"dev6","x":160,"y":72,"label":"NOT"},
-      {"type":"AND","id":"dev7","x":208,"y":24,"label":"AND"},
-      {"type":"AND","id":"dev8","x":208,"y":72,"label":"AND"},
-      {"type":"OR","id":"dev9","x":256,"y":48,"label":"OR"},
-      {"type":"Out","id":"dev10","x":304,"y":48,"label":""},
-      {"type":"LED","id":"dev11","x":352,"y":48,"label":"LED"}
+      {"type":"Out","id":"dev5","x":256,"y":48,"label":""},
+      {"type":"LED","id":"dev6","x":304,"y":48,"label":"LED"},
+      {"type":"OR","id":"dev7","x":160,"y":24,"label":"OR"},
+      {"type":"NAND","id":"dev8","x":160,"y":72,"label":"NAND"},
+      {"type":"AND","id":"dev9","x":208,"y":48,"label":"AND"}
     ],
     "connectors":[
       {"from":"dev0.in0","to":"dev1.out0"},
       {"from":"dev2.in0","to":"dev1.out0"},
       {"from":"dev3.in0","to":"dev0.out0"},
       {"from":"dev4.in0","to":"dev2.out0"},
-      {"from":"dev5.in0","to":"dev3.out0"},
-      {"from":"dev6.in0","to":"dev4.out0"},
-      {"from":"dev7.in0","to":"dev5.out0"},
+      {"from":"dev5.in0","to":"dev9.out0"},
+      {"from":"dev6.in0","to":"dev5.out0"},
+      {"from":"dev7.in0","to":"dev3.out0"},
       {"from":"dev7.in1","to":"dev4.out0"},
       {"from":"dev8.in0","to":"dev3.out0"},
-      {"from":"dev8.in1","to":"dev6.out0"},
+      {"from":"dev8.in1","to":"dev4.out0"},
       {"from":"dev9.in0","to":"dev7.out0"},
-      {"from":"dev9.in1","to":"dev8.out0"},
-      {"from":"dev10.in0","to":"dev9.out0"},
-      {"from":"dev11.in0","to":"dev10.out0"}
+      {"from":"dev9.in1","to":"dev8.out0"}
     ],
-    // Custom draw
-    chipWidth: 2,
-    draw: drawXOR,
   },
 
-  // 5: Multiplexor
+  // Multiplexor
   {
     name: 'Mux',
     "devices":[
@@ -231,7 +227,7 @@ const kDevices: any = [
     ],
   },
 
-  // 6: Demultiplexor
+  // Demultiplexor
   {
     name: 'DMux',
     "devices":[
