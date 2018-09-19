@@ -40,6 +40,11 @@ function drawXOR(g: any, x: number, y: number, width: number, height: number) {
   g.closePath()
 }
 
+function drawNOR(g: any, x: number, y: number, width: number, height: number) {
+  drawOR(g, x - 1, y, width, height)
+  g.drawCircle(x + width, y + height / 2, 2)
+}
+
 const kDevices: any = [
   // NAND
   {
@@ -185,6 +190,40 @@ const kDevices: any = [
       {"from":"dev8.in1","to":"dev4.out0"},
       {"from":"dev9.in0","to":"dev7.out0"},
       {"from":"dev9.in1","to":"dev8.out0"}
+    ],
+  },
+
+  // NOR
+  {
+    name: 'NOR',
+    width: 600,
+    height: 150,
+    noRender: true,
+    //noToolbox: true,
+    // Custom draw
+    chipWidth: 2,
+    draw: drawNOR,
+    "devices":[
+      {"type":"Toggle","id":"dev0","x":64,"y":24,"label":"Toggle","state":{"on":false}},
+      {"type":"DC","id":"dev1","x":16,"y":48,"label":"DC"},
+      {"type":"Toggle","id":"dev2","x":64,"y":72,"label":"Toggle","state":{"on":false}},
+      {"type":"In","id":"dev3","x":112,"y":24,"label":""},
+      {"type":"In","id":"dev4","x":112,"y":72,"label":""},
+      {"type":"Out","id":"dev5","x":256,"y":48,"label":""},
+      {"type":"LED","id":"dev6","x":304,"y":48,"label":"LED"},
+      {"type":"OR","id":"dev7","x":160,"y":48,"label":"OR"},
+      {"type":"NOT","id":"dev8","x":208,"y":48,"label":"NOT"}
+    ],
+    "connectors":[
+      {"from":"dev0.in0","to":"dev1.out0"},
+      {"from":"dev2.in0","to":"dev1.out0"},
+      {"from":"dev3.in0","to":"dev0.out0"},
+      {"from":"dev4.in0","to":"dev2.out0"},
+      {"from":"dev5.in0","to":"dev8.out0"},
+      {"from":"dev6.in0","to":"dev5.out0"},
+      {"from":"dev7.in0","to":"dev3.out0"},
+      {"from":"dev7.in1","to":"dev4.out0"},
+      {"from":"dev8.in0","to":"dev7.out0"}
     ],
   },
 
@@ -1192,6 +1231,71 @@ const kDevices: any = [
       {"from":"dev56.in0","to":"dev53.out1"},
       {"from":"dev57.in0","to":"dev38.out0"},
       {"from":"dev57.in1","to":"dev56.out0"}
+    ],
+  },
+
+  // RS-FF
+  {
+    name: 'RS-FF',
+    width: 600,
+    height: 150,
+    "devices":[
+      {"type":"DC","id":"dev0","x":16,"y":32,"label":"DC"},
+      {"type":"NOR","id":"dev1","x":160,"y":16,"label":"NOR"},
+      {"type":"Toggle","id":"dev2","x":64,"y":64,"label":"Toggle","state":{"on":true}},
+      {"type":"Toggle","id":"dev3","x":64,"y":16,"label":"Toggle","state":{"on":false}},
+      {"type":"NOR","id":"dev4","x":160,"y":64,"label":"NOR"},
+      {"type":"In","id":"dev5","x":112,"y":16,"label":"R"},
+      {"type":"In","id":"dev6","x":112,"y":64,"label":"S"},
+      {"type":"LED","id":"dev7","x":256,"y":16,"label":"LED"},
+      {"type":"Out","id":"dev8","x":208,"y":16,"label":"Q"}
+    ],
+    "connectors":[
+      {"from":"dev1.in0","to":"dev5.out0"},
+      {"from":"dev1.in1","to":"dev4.out0"},
+      {"from":"dev2.in0","to":"dev0.out0"},
+      {"from":"dev3.in0","to":"dev0.out0"},
+      {"from":"dev4.in0","to":"dev1.out0"},
+      {"from":"dev4.in1","to":"dev6.out0"},
+      {"from":"dev5.in0","to":"dev3.out0"},
+      {"from":"dev6.in0","to":"dev2.out0"},
+      {"from":"dev7.in0","to":"dev8.out0"},
+      {"from":"dev8.in0","to":"dev1.out0"}
+    ],
+  },
+
+  // D-FF
+  {
+    name: 'D-FF',
+    width: 600,
+    height: 150,
+    "devices":[
+      {"type":"DC","id":"dev0","x":16,"y":24,"label":"DC"},
+      {"type":"Toggle","id":"dev1","x":64,"y":16,"label":"Toggle","state":{"on":false}},
+      {"type":"Toggle","id":"dev2","x":64,"y":64,"label":"Toggle","state":{"on":true}},
+      {"type":"In","id":"dev3","x":112,"y":16,"label":"D"},
+      {"type":"In","id":"dev4","x":112,"y":64,"label":"CLK"},
+      {"type":"NOT","id":"dev5","x":160,"y":16,"label":"NOT"},
+      {"type":"LED","id":"dev6","x":384,"y":32,"label":"LED"},
+      {"type":"AND","id":"dev7","x":208,"y":16,"label":"AND"},
+      {"type":"AND","id":"dev8","x":208,"y":56,"label":"AND"},
+      {"type":"RS-FF","id":"dev9","x":256,"y":32,"label":"RS-FF"},
+      {"type":"Out","id":"dev10","x":336,"y":32,"label":"Out"}
+    ],
+    "connectors":[
+      {"from":"dev1.in0","to":"dev0.out0"},
+      {"from":"dev2.in0","to":"dev0.out0"},
+      {"from":"dev3.in0","to":"dev1.out0"},
+      {"from":"dev4.in0","to":"dev2.out0"},
+      {"from":"dev5.in0","to":"dev3.out0"},
+      {"from":"dev6.in0","to":"dev10.out0"},
+      {"from":"dev7.in0","to":"dev5.out0"},
+      {"from":"dev7.in1","to":"dev4.out0"},
+      {"from":"dev8.in0","to":"dev3.out0"},
+      {"from":"dev8.in1","to":"dev4.out0"},
+      {"from":"dev9.in0","to":"dev7.out0"},
+      {"from":"dev9.in1","to":"dev8.out0"},
+      {"from":"dev10.in0","to":"dev9.out0"}
     ],
   },
 
