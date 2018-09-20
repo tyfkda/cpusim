@@ -16,6 +16,7 @@ import htmlmin from 'gulp-htmlmin'
 
 // SASS
 import sass from 'gulp-sass'
+import sassPackageImporter from 'node-sass-package-importer'
 import cssnano from 'gulp-cssnano'
 
 // Unit test
@@ -113,7 +114,9 @@ gulp.task('watch-ts', () => {
 gulp.task('sass', () => {
   return gulp.src(SRC_SASS_FILES)
     .pipe(plumber())
-    .pipe(sass())
+    .pipe(sass({
+      importer: sassPackageImporter({}),
+    }))
     .pipe(cssnano())
     .pipe(gulp.dest(ASSETS_DIR))
     .pipe(browserSync.stream())

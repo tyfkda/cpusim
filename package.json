@@ -54,6 +54,7 @@
     "gulp-util": "~3.0.7",
     "jest": "~23.5.0",
     "jest-cli": "~23.5.0",
+    "node-sass-package-importer": "~5.2.0",
     "through2": "~2.0.0",
     "ts-jest": "~23.1.4",
     "ts-loader": "~5.0.0",
