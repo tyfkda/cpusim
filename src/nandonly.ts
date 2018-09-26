@@ -288,14 +288,14 @@ const createLogicGateFactory = function(op: Function, out: Function, draw: (g: G
 // register direct current source
 $s.registerDevice('DC', function(device: any) {
   device.addOutput()
+  device.getOutputs()[0].setValue(onValue);  // Enable DC on default.
   const super_createUI = device.createUI
   device.createUI = function() {
     super_createUI()
     device.$ui.addClass('simcir-basicset-dc')
   }
-  device.$ui.on('deviceAdd', function() {
-    device.getOutputs()[0].setValue(onValue)
-  })
+  //device.$ui.on('deviceAdd', function() {
+  //})
   device.$ui.on('deviceRemove', function() {
     device.getOutputs()[0].setValue(null)
   })

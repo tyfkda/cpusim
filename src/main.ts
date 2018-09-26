@@ -940,21 +940,17 @@ const kDevices: any = [
       {"type":"In","id":"dev1","x":24,"y":56,"label":"H"},
       {"type":"Out","id":"dev2","x":272,"y":24,"label":"L"},
       {"type":"Out","id":"dev3","x":272,"y":56,"label":"H"},
-      {"type":"NOT","id":"dev4","x":32,"y":112,"label":"NOT"},
-      {"type":"NAND","id":"dev5","x":72,"y":112,"label":"NAND"},
-      {"type":"BusOut","id":"dev6","x":128,"y":120,"label":"BusOut"},
-      {"type":"Add16","id":"dev7","x":184,"y":32,"label":"Add16"}
+      {"type":"BusOut","id":"dev4","x":128,"y":120,"label":"BusOut"},
+      {"type":"Add16","id":"dev5","x":184,"y":32,"label":"Add16"},
+      {"type":"DC","id":"dev6","x":24,"y":112,"label":"DC"}
     ],
     "connectors":[
-      {"from":"dev2.in0","to":"dev7.out0"},
-      {"from":"dev3.in0","to":"dev7.out1"},
-      {"from":"dev4.in0","to":"dev1.out0"},
-      {"from":"dev5.in0","to":"dev1.out0"},
-      {"from":"dev5.in1","to":"dev4.out0"},
-      {"from":"dev6.in0","to":"dev5.out0"},
-      {"from":"dev7.in1","to":"dev0.out0"},
-      {"from":"dev7.in2","to":"dev1.out0"},
-      {"from":"dev7.in3","to":"dev6.out0"}
+      {"from":"dev2.in0","to":"dev5.out0"},
+      {"from":"dev3.in0","to":"dev5.out1"},
+      {"from":"dev4.in0","to":"dev6.out0"},
+      {"from":"dev5.in1","to":"dev0.out0"},
+      {"from":"dev5.in2","to":"dev1.out0"},
+      {"from":"dev5.in3","to":"dev4.out0"}
     ],
   },
 
