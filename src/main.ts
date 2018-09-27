@@ -1295,6 +1295,41 @@ const kDevices: any = [
     ],
   },
 
+  // Bit
+  {
+    name: 'Bit',
+    width: 600,
+    height: 150,
+    "devices":[
+      {"type":"DC","id":"dev0","x":16,"y":32,"label":"DC"},
+      {"type":"Toggle","id":"dev1","x":64,"y":16,"label":"Toggle","state":{"on":false}},
+      {"type":"Toggle","id":"dev2","x":64,"y":64,"label":"Toggle","state":{"on":true}},
+      {"type":"Mux","id":"dev3","x":160,"y":32,"label":"Mux"},
+      {"type":"D-FF","id":"dev4","x":240,"y":48,"label":"D-FF"},
+      {"type":"Out","id":"dev5","x":320,"y":48,"label":"Out"},
+      {"type":"Toggle","id":"dev6","x":64,"y":120,"label":"Toggle","state":{"on":true}},
+      {"type":"In","id":"dev7","x":112,"y":16,"label":"in"},
+      {"type":"In","id":"dev8","x":112,"y":64,"label":"load"},
+      {"type":"In","id":"dev9","x":112,"y":120,"label":"CLK"},
+      {"type":"LED","id":"dev10","x":368,"y":48,"label":"LED"}
+    ],
+    "connectors":[
+      {"from":"dev1.in0","to":"dev0.out0"},
+      {"from":"dev2.in0","to":"dev0.out0"},
+      {"from":"dev3.in0","to":"dev4.out0"},
+      {"from":"dev3.in1","to":"dev7.out0"},
+      {"from":"dev3.in2","to":"dev8.out0"},
+      {"from":"dev4.in0","to":"dev3.out0"},
+      {"from":"dev4.in1","to":"dev9.out0"},
+      {"from":"dev5.in0","to":"dev4.out0"},
+      {"from":"dev6.in0","to":"dev0.out0"},
+      {"from":"dev7.in0","to":"dev1.out0"},
+      {"from":"dev8.in0","to":"dev2.out0"},
+      {"from":"dev9.in0","to":"dev6.out0"},
+      {"from":"dev10.in0","to":"dev5.out0"}
+    ],
+  },
+
   // Final
   {
   },
