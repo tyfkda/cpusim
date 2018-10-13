@@ -1,11 +1,12 @@
-import webpack from 'webpack'
 import path from 'path'
+import webpack from 'webpack'
 
 module.exports = {
+  context: __dirname + '/src',
   mode: 'production',
   entry: {
-    vendors: ['./src/vendors.ts'],
-    main: './src/main.ts',
+    vendors: ['./vendors.ts'],
+    main: './main.ts',
   },
   output: {
     path: path.resolve(__dirname, 'public/assets'),
@@ -13,12 +14,12 @@ module.exports = {
     sourceMapFilename: '[name].map',
   },
   resolve: {
-    extensions: ['.ts', '.js', '.tsx', '.jsx']
+    extensions: ['.ts', '.js', '.tsx', '.jsx'],
   },
   module: {
     rules: [
-      {test: /\.js$/, use: {loader: 'babel-loader'}},
-      {test: /\.ts$/, use: {loader: 'ts-loader'}},
+      {test: /\.js$/, exclude: /node_modules/, use: {loader: 'babel-loader'}},
+      {test: /\.ts$/, exclude: /node_modules/, use: {loader: 'ts-loader'}},
     ],
   },
   optimization: {

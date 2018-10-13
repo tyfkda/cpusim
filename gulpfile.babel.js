@@ -72,7 +72,6 @@ function buildWhenModified(glob, buildFunc) {
 }
 
 gulp.task('reload', (done) => {
-  console.log('reload')
   browserSync.reload()
   done()
 })
@@ -198,6 +197,7 @@ gulp.task('release', gulp.series('build', () => {
 
   // Concatenate TypeScript into single 'assets/main.ts' file.
   const config = clone(webpackConfig)
+  delete config.output.sourceMapFilename
   return gulp.src(`${SRC_TS_DIR}/main.ts`)
     .pipe(webpackStream(config, webpack))
     .pipe(gulp.dest(RELEASE_ASSETS_DIR))
