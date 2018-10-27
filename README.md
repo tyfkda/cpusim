@@ -1,13 +1,9 @@
-FrontendTemplate
-================
+CPU Simulator
+=============
 
-Project template for frontend development:
+CPU built from NAND only.
 
-* TypeScript + tslint
-* HTML
-* SASS (CSS)
-* JS test: Jest
-
+It uses [modified SimCirJS](https://github.com/tyfkda/simcirjs) library to simulate logic gate.
 
 ## Requirement
 
